@@ -381,34 +381,63 @@ page 50137 "Staring Function"
                         Message('Today Date ' + Format(Today) + '\\' + myText + '.');
                     end;
                 }
-                group("Array functions")
+            }
+            group("Array functions")
+            {
+                action(ArrayLen)
                 {
-                    action(ArrayLen)
-                    {
-                        ApplicationArea = All;
+                    ApplicationArea = All;
 
-                        trigger OnAction()
-                        var
-                            SaleAmount: array[10] of Integer;
-                            Length: Integer;
-                        begin
+                    trigger OnAction()
+                    var
+                        SaleAmount1: array[10] of Integer;
+                        Length23: Integer;
+                    begin
+                        Clear(SaleAmount1);
+                        Clear(Length23);
+                        Length23 := ArrayLen(SaleAmount1);
+                        Message('%1', Length23);
+                        // Displays : 0
 
-                            Length := ArrayLen(SaleAmount);
-                            Message('%1', Length);
-                            // Displays : 0
+                        SaleAmount1[1] := 1;
+                        SaleAmount1[2] := 2;
+                        SaleAmount1[3] := 3;
+                        SaleAmount1[1] := 10;
 
-                            SaleAmount[1] := 1;
-                            SaleAmount[2] := 2;
-                            SaleAmount[3] := 3;
-                            SaleAmount[1] := 10;
+                        Length23 := ArrayLen(SaleAmount1);
+                        Message('%1', Length23);
+                        // Displays : 3
+                    end;
+                }
+                action(ArrayFunctionUse)
+                {
+                    // ApplicationArea = All;
 
-                            Length := ArrayLen(SaleAmount);
-                            Message('%1', Length);
-                            // Displays : 3
-                        end;
-                    }
+                    // trigger OnAction()
+                    // var
+                    //     Cust: Record Customer;
+                    //     SaleAmount1: array[10] of Integer;
+                    //     CustumerCount, I, J : Integer;
+                    //     ValuesTable: Record "Values Table";
+                    // begin
+                        // Clear(SaleAmount1);
+                        // Clear(Length23);
+                        // Length23 := ArrayLen(SaleAmount1);
+                        // Message('%1', Length23);
+                        // // Displays : 0
+
+                        // SaleAmount1[1] := 1;
+                        // SaleAmount1[2] := 2;
+                        // SaleAmount1[3] := 3;
+                        // SaleAmount1[1] := 10;
+
+                        // Length23 := ArrayLen(SaleAmount1);
+                        // Message('%1', Length23);
+                        // // Displays : 3
+                    // end;
                 }
             }
+
         }
     }
 
