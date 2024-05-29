@@ -1,13 +1,13 @@
 /// <summary>
 /// TableExtension SalesReceivablesSetupExt (ID 50137) extends Record Sales & Receivables Setup.
 /// </summary>
-tableextension 50137 SalesReceivablesSetupExt extends "Sales & Receivables Setup"
+tableextension 50137 PurchasesPayablesSetupExt extends "Purchases & Payables Setup"
 {
     fields
     {
-        field(50200; "Hidden Posted Sales Invoices"; Text[2048])
+        field(50200; "Hidden Posted Purch. Invoices"; Text[2048])
         {
-            Caption = 'Hidden Posted Sales Invoices';
+            Caption = 'Hidden Posted Purch. Invoices';
             DataClassification = CustomerContent;
         }
     }

@@ -324,10 +324,10 @@ page 50137 "Staring Function"
                         Message(Text000, Today);
                     end;
                 }
-                action("Createdatetime")
+                action("CurrentDateTime")
                 {
                     ApplicationArea = All;
-                    Caption = 'Createdatetime';
+                    Caption = 'CurrentDateTime';
 
                     trigger OnAction()
                     var
@@ -359,20 +359,15 @@ page 50137 "Staring Function"
 
                     trigger OnAction()
                     var
-                        Expr1, Expr2, Expr3, Expr4, Expr5, Expr6 : Text[30];
                         Expr, Meaning : List of [Text];
                         RefDate: DateTime;
-                        Date1, Date2, Date3 : Date;
-                        DayOfWeek, WeekNumber, Year, myInteger : Integer;
-                        Text000: Label 'The reference date is: %1 \';
-                        Text001: Label 'The expression: %2 returns %3\';
-                        Text002: Label 'The expression: %4 returns %5\';
-                        Text003: Label 'The expression: %6 returns %7';
+                        Date1, Date2 : Date;
+                        myInteger: Integer;
                         myText: Text;
                     begin
                         Clear(myInteger);
-                        Expr.AddRange('<CM>', '<-CM>', '<CY>', '<CW>', '<1M>', '<1M+CM>', '<CM+D25>', '<CM+45D>', '<7D', 'D7>', '<D25>', '<-D10>', '<WD1>', '<WD6>', '<1Q+1M+CM>', '<1Y-CY>', '<CY+1D>', '<CW>', '<1M>', '<-1M>', '<-1Q>', '<-1Y>', '<-1W>');
-                        Meaning.AddRange('End of Month', 'Beginning of Month','End Of The Current Year','End Of This Week [Sunday]', 'Plus 1 Month', 'End of Next Month', 'Day 25th of the following month', '45 Days after End of Month', 'Plus 7 Days', 'The next Day 7th', 'The next Day 25th', 'The previous Day 10th', 'The next Week Day 1: Monday', 'The next Week Day 6 : Saturday', 'Plus 1 Quarter and 1 Month, End of Month', 'Beginning of Next Year', 'Beginning of Next Year', 'End of this week (Sunday)', 'Next month (February 2022 only has 28 days)', 'Last month', 'Last quarter', 'Last year', 'Last week');
+                        Expr.AddRange('<CM>', '<-CM>', '<CY>', '<CW>', '<1M>', '<1M+CM>', '<CM+D25>', '<CM+45D>', '<7D>', '<D7>', '<D25>', '<-D10>', '<WD1>', '<WD6>', '<1Q+1M+CM>', '<1Y-CY>', '<CY+1D>', '<CW>', '<1M>', '<-1M>', '<-1Q>', '<-1Y>', '<-1W>', '<1Q>', '<1Y>', '<+1W>');
+                        Meaning.AddRange('End of Month', 'Beginning of Month', 'End Of The Current Year', 'End Of This Week [Sunday]', 'Plus 1 Month', 'End of Next Month', 'Day 25th of the following month', '45 Days after End of Month', 'Plus 7 Days', 'The next Day 7th', 'The next Day 25th', 'The previous Day 10th', 'The next Week Day 1: Monday', 'The next Week Day 6 : Saturday', 'Plus 1 Quarter and 1 Month, End of Month', 'Beginning of Next Year', 'Beginning of Next Year', 'End of this week (Sunday)', 'Next month (February 2022 only has 28 days)', 'Last month', 'Last quarter', 'Last year', 'Last week', 'Plus Quarter', 'Plus Year', 'Plus Week');
                         // Message('%1 %2', Expr.Count, Meaning.Count);
                         repeat
                             if myText <> '' then
@@ -385,6 +380,33 @@ page 50137 "Staring Function"
                         until Expr.Count = myInteger;
                         Message('Today Date ' + Format(Today) + '\\' + myText + '.');
                     end;
+                }
+                group("Array functions")
+                {
+                    action(ArrayLen)
+                    {
+                        ApplicationArea = All;
+
+                        trigger OnAction()
+                        var
+                            SaleAmount: array[10] of Integer;
+                            Length: Integer;
+                        begin
+
+                            Length := ArrayLen(SaleAmount);
+                            Message('%1', Length);
+                            // Displays : 0
+
+                            SaleAmount[1] := 1;
+                            SaleAmount[2] := 2;
+                            SaleAmount[3] := 3;
+                            SaleAmount[1] := 10;
+
+                            Length := ArrayLen(SaleAmount);
+                            Message('%1', Length);
+                            // Displays : 3
+                        end;
+                    }
                 }
             }
         }

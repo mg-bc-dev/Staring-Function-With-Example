@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension Posted Sales Invoices Ext (ID 50137) extends Record Posted Sales Invoices.
 /// </summary>
-pageextension 50137 "Posted Sales Invoices Ext" extends "Posted Sales Invoices"
+pageextension 50137 "Posted Purchase Invoices Ext" extends "Posted Purchase Invoices"
 {
     actions
     {
@@ -48,12 +48,12 @@ pageextension 50137 "Posted Sales Invoices Ext" extends "Posted Sales Invoices"
 
                 trigger OnAction()
                 var
-                    SalesInvoiceHeader: Record "Sales Invoice Header";
+                    PurchInvHdr: Record "Purch. Inv. Header";
                 begin
                     Rec.Reset();
-                    SalesInvoiceHeader.Reset();
-                    CurrPage.SetSelectionFilter(SalesInvoiceHeader);
-                    Rec.SetFilter("No.", GetExclusionFilter(SalesInvoiceHeader));
+                    PurchInvHdr.Reset();
+                    CurrPage.SetSelectionFilter(PurchInvHdr);
+                    Rec.SetFilter("No.", GetExclusionFilter(PurchInvHdr));
                     CurrPage.Update();
                 end;
             }
@@ -68,17 +68,17 @@ pageextension 50137 "Posted Sales Invoices Ext" extends "Posted Sales Invoices"
 
                 trigger OnAction()
                 var
-                    SalesInvoiceHeader: Record "Sales Invoice Header";
+                    PurchInvoiceHeader: Record "Purch. Inv. Header";
                 begin
                     Filter := '';
                     Rec.Reset();
-                    SalesInvoiceHeader.Reset();
-                    CurrPage.SetSelectionFilter(SalesInvoiceHeader);
-                    SalesReceivablesSetup.Get();
-                    Filter := SalesReceivablesSetup."Hidden Posted Sales Invoices";
-                    SetExclusionFilter(SalesInvoiceHeader);
+                    PurchInvoiceHeader.Reset();
+                    CurrPage.SetSelectionFilter(PurchInvoiceHeader);
+                    PurchPayablesSetup.Get();
+                    Filter := PurchPayablesSetup."Hidden Posted Purch. Invoices";
+                    SetExclusionFilter(PurchInvoiceHeader);
                     Rec.filtergroup(100);
-                    Rec.SetFilter("No.", SalesReceivablesSetup."Hidden Posted Sales Invoices");
+                    Rec.SetFilter("No.", PurchPayablesSetup."Hidden Posted Purch. Invoices");
                     Rec.FilterGroup(0);
                 end;
             }
@@ -86,48 +86,58 @@ pageextension 50137 "Posted Sales Invoices Ext" extends "Posted Sales Invoices"
 
     }
 
+    trigger OnAfterGetRecord()
+    begin
+        PurchPayablesSetup.Get();
+        if PurchPayablesSetup."Hidden Posted Purch. Invoices" <> '' then begin
+            Rec.filtergroup(100);
+            Rec.SetFilter("No.", PurchPayablesSetup."Hidden Posted Purch. Invoices");
+            Rec.FilterGroup(0);
+        end;
+    end;
+
     trigger OnOpenPage()
     begin
-        SalesReceivablesSetup.Get();
-        if SalesReceivablesSetup."Hidden Posted Sales Invoices" <> '' then begin
+        PurchPayablesSetup.Get();
+        if PurchPayablesSetup."Hidden Posted Purch. Invoices" <> '' then begin
             Rec.filtergroup(100);
-            Rec.SetFilter("No.", SalesReceivablesSetup."Hidden Posted Sales Invoices");
+            Rec.SetFilter("No.", PurchPayablesSetup."Hidden Posted Purch. Invoices");
             Rec.FilterGroup(0);
         end;
     end;
 
     var
-        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        PurchPayablesSetup: Record "Purchases & Payables Setup";
         Filter: Text;
 
-    local procedure SetExclusionFilter(var SalesInvoiceHeader: Record "Sales Invoice Header")
+    local procedure SetExclusionFilter(var PurchInvHeader: Record "Purch. Inv. Header")
     begin
-        if SalesInvoiceHeader.FindSet() then
+        if PurchInvHeader.FindSet() then
             repeat
                 if Filter = '' then
-                    Filter := '<>' + Format(SalesInvoiceHeader."No.")
+                    Filter := '<>' + Format(PurchInvHeader."No.")
                 else
-                    Filter := Filter + '&' + '<>' + Format(SalesInvoiceHeader."No.");
-            until SalesInvoiceHeader.Next() = 0;
+                    Filter := Filter + '&' + '<>' + Format(PurchInvHeader."No.");
+            until PurchInvHeader.Next() = 0;
         if Filter <> '' then begin
-            SalesReceivablesSetup.Get();
-            SalesReceivablesSetup."Hidden Posted Sales Invoices" := Filter;
-            SalesReceivablesSetup.Modify(true);
+            PurchPayablesSetup.Get();
+            PurchPayablesSetup."Hidden Posted Purch. Invoices" := Filter;
+            PurchPayablesSetup.Modify(true);
         end;
     end;
 
-    local procedure GetExclusionFilter(var SalesInvoiceHeader: Record "Sales Invoice Header"): Text
+    local procedure GetExclusionFilter(var PurchInvHeader: Record "Purch. Inv. Header"): Text
     var
         Filter: Text;
     begin
         Filter := '';
-        if SalesInvoiceHeader.FindSet() then
+        if PurchInvHeader.FindSet() then
             repeat
                 if Filter = '' then
-                    Filter := '<>' + Format(SalesInvoiceHeader."No.")
+                    Filter := '<>' + Format(PurchInvHeader."No.")
                 else
-                    Filter := Filter + '&' + '<>' + Format(SalesInvoiceHeader."No.");
-            until SalesInvoiceHeader.Next() = 0;
+                    Filter := Filter + '&' + '<>' + Format(PurchInvHeader."No.");
+            until PurchInvHeader.Next() = 0;
         exit(Filter);
     end;
 }
