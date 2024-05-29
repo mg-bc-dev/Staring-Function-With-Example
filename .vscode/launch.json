@@ -9,7 +9,7 @@
             "server": "http://test/BC/",
             "serverInstance": "BC",
             "authentication": "Windows",
-            "startupObjectId": 50100,
+            "startupObjectId": 27,
             "startupObjectType": "Page",
             "breakOnError": "All",
             "launchBrowser": true,
@@ -17,6 +17,21 @@
             "enableSqlInformationDebugger": true,
             "tenant": "default",
             "usePublicURLFromServer": true
-        }
-    ]
+        },
+        {
+                "name": "MBS",
+                "request": "launch",
+                "type": "al",
+                "environmentType": "Sandbox",
+                "environmentName": "Sandbox_13OCT22",
+                "startupObjectId": 50137,
+                "startupObjectType": "Page",
+                "breakOnError": "All",
+                "launchBrowser": true,
+                "enableLongRunningSqlStatements": true,
+                "enableSqlInformationDebugger": true,
+                "tenant": "599898c8-8778-4415-be06-b35e5759a8dd"
+            }
+        ]
+    
 }
