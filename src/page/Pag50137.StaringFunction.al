@@ -409,38 +409,190 @@ page 50137 "Staring Function"
                         // Displays : 3
                     end;
                 }
-                action(ArrayFunctionUse)
+                action(COMPRESSARRAY)
                 {
-                    // ApplicationArea = All;
+                    ApplicationArea = All;
+                    Caption = 'COMPRESS ARRAY';
 
-                    // trigger OnAction()
-                    // var
-                    //     Cust: Record Customer;
-                    //     SaleAmount1: array[10] of Integer;
-                    //     CustumerCount, I, J : Integer;
-                    //     ValuesTable: Record "Values Table";
-                    // begin
-                        // Clear(SaleAmount1);
-                        // Clear(Length23);
-                        // Length23 := ArrayLen(SaleAmount1);
-                        // Message('%1', Length23);
-                        // // Displays : 0
+                    trigger OnAction()
+                    var
+                        ArrayText: array[10] of Text;
+                        TotalNoOfElements, TotalNoOfElements1 : Integer;
+                        I: Integer;
+                        myText: Text;
+                    begin
+                        ArrayText[1] := 'One';
+                        ArrayText[2] := 'Two';
+                        ArrayText[3] := '';
+                        ArrayText[4] := 'Three';
+                        ArrayText[5] := '';
+                        ArrayText[6] := 'Six';
+                        ArrayText[7] := '';
+                        ArrayText[8] := '';
+                        ArrayText[9] := 'Nine';
+                        ArrayText[10] := 'Ten';
+                        TotalNoOfElements := ArrayLen(ArrayText);
+                        myText := 'Without Compress Function Use\';
+                        for I := 1 to TotalNoOfElements do begin
+                            if ArrayText[I] <> '' then begin
+                                myText += Format(I) + ' ' + ArrayText[I] + '\';
+                            end else begin
+                                myText += Format(I) + ' ' + ArrayText[I] + 'Empty\';
+                            end;
+                        end;
+                        // Message(myText);
+                        TotalNoOfElements1 := CompressArray(ArrayText);
+                        myText += '\\With Compress Function Use\';
+                        for I := 1 to TotalNoOfElements do begin
+                            if ArrayText[I] <> '' then begin
+                                myText += Format(I) + ' ' + ArrayText[I] + '\';
+                            end else begin
+                                myText += Format(I) + ' ' + ArrayText[I] + 'Empty\';
+                            end;
+                        end;
+                        Message(myText);
+                        Message('Totel Number of The Array & Without Using The Compress Function \%1 \\ and Using The Compress Function %2', TotalNoOfElements, TotalNoOfElements1);
+                    end;
+                }
+                action(COPYARRAY)
+                {
+                    ApplicationArea = All;
 
-                        // SaleAmount1[1] := 1;
-                        // SaleAmount1[2] := 2;
-                        // SaleAmount1[3] := 3;
-                        // SaleAmount1[1] := 10;
+                    trigger OnAction()
+                    var
+                        ArrayText: array[10] of Text;
+                        ArrayTwo: array[5] of Text;
+                        Length23, I : Integer;
+                        myText: Text;
+                    begin
+                        ArrayText[1] := 'One';
+                        ArrayText[2] := 'Two';
+                        ArrayText[3] := '';
+                        ArrayText[4] := 'Four';
+                        ArrayText[5] := '';
+                        ArrayText[6] := 'Six';
+                        ArrayText[7] := '';
+                        ArrayText[8] := '';
 
-                        // Length23 := ArrayLen(SaleAmount1);
-                        // Message('%1', Length23);
-                        // // Displays : 3
-                    // end;
+                        CopyArray(ArrayTwo, ArrayText, 1, 5);
+
+                        for I := 1 to 5 do begin
+                            if ArrayTwo[I] <> '' then begin
+                                myText += Format(I) + ' ' + ArrayTwo[I] + '\';
+                            end else begin
+                                myText += Format(I) + ' ' + ArrayTwo[I] + 'Empty\';
+                            end;
+                        end;
+                        Message(myText);
+                    end;
                 }
             }
+            group("List functions")
+            {
+                action(List)
+                {
+                    ApplicationArea = All;
 
+                    trigger OnAction()
+                    begin
+                        TestListAssignment();
+                        TestListShallowCopy();
+                        TestNestedListDeepCopy();
+                        TestNestedListShallowCopy();
+                    end;
+                }
+            }
         }
     }
 
     var
         Val1: Text[30];
+
+    local procedure TestListAssignment()
+    var
+        i: Integer;
+        ListNumberOne: List of [Integer];
+        ListNumberTwo: List of [Integer];
+    begin
+        for i := 1 to 20 do
+            ListNumberOne.Add(i);
+
+        ListNumberTwo := ListNumberOne;
+
+        ListNumberTwo.Add(21);
+
+        Message('List1 count: %1\List2 count: %2', ListNumberOne.Count(), ListNumberTwo.Count());
+    end;    
+
+    local procedure TestListShallowCopy()
+    var
+        i: Integer;
+        ListNumberOne: List of [Integer];
+        ListNumberTwo: List of [Integer];
+    begin
+        for i := 1 to 20 do
+            ListNumberOne.Add(i);
+
+        ListNumberTwo := ListNumberOne.GetRange(1, ListNumberOne.Count());
+
+        ListNumberTwo.Add(21);
+
+        Message('List1 count: %1\List2 count: %2', ListNumberOne.Count(), ListNumberTwo.Count());
+    end;
+
+    local procedure TestNestedListShallowCopy()
+    var
+        ListNumberOne: List of [List of [Integer]];
+        ListNumberTwo: List of [List of [Integer]];
+        NestedList: List of [Integer];
+        i: Integer;
+        k: Integer;
+    begin
+        //ListNumberOne will contain 25 NestedList, Nested list contain numbers from 6 to 10 (5 in total)
+        for k := 6 to 10 do begin
+            NestedList.Add(k);
+            for i := 1 to 5 do
+                ListNumberOne.Add(NestedList);
+        end;
+
+        //Shallow copy ListNumberOne to ListNumberTwo
+        ListNumberTwo := ListNumberOne.GetRange(1, ListNumberOne.Count());
+
+        //Additional number to Nested List will be displayed in ListNumberOne and ListNumberTwo as well
+        NestedList.Add(11);
+
+        //Result is 6 and 6 (6..11), because nested list is updated in previous step (we just check first nested list by index 1)
+        Message('NestedList1 count: %1\NestedList2 count: %2',
+            ListNumberOne.Get(1).Count(),
+            ListNumberTwo.Get(1).Count());
+    end;
+
+
+    local procedure TestNestedListDeepCopy()
+    var
+        ListNumberOne: List of [List of [Integer]];
+        ListNumberTwo: List of [List of [Integer]];
+        NestedList: List of [Integer];
+        i: Integer;
+        k: Integer;
+    begin
+        //ListNumberOne will contain 25 NestedList, Nested list contain numbers from 6 to 10 (5 in total)
+        for k := 6 to 10 do begin
+            NestedList.Add(k);
+            for i := 1 to 5 do
+                ListNumberOne.Add(NestedList);
+        end;
+
+        //Deep copy ListNumberOne to ListNumberTwo
+        foreach NestedList in ListNumberOne do
+            ListNumberTwo.Add(NestedList.GetRange(1, NestedList.Count()));
+
+        //Additional number to Nested List will be displayed in ListNumberOne only
+        NestedList.Add(11);
+
+        //Result is 6 and 5 because ListNumberTwo contain a new copy of nested list (it was same reference in shallow copy)
+        Message('NestedList1 count: %1\NestedList2 count: %2',
+            ListNumberOne.Get(1).Count(),
+            ListNumberTwo.Get(1).Count());
+    end;
 }
