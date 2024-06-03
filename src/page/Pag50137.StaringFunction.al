@@ -384,7 +384,7 @@ page 50137 "Staring Function"
             }
             group("Array functions")
             {
-                action(ArrayLen)
+                action(ARRAYLEN)
                 {
                     ApplicationArea = All;
 
@@ -499,6 +499,302 @@ page 50137 "Staring Function"
                         TestListShallowCopy();
                         TestNestedListDeepCopy();
                         TestNestedListShallowCopy();
+                        WorkWithListOfCustomers();
+                    end;
+                }
+                action(Add)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myIntegerList: List of [Integer];
+                        myText: Text;
+                        myInteger: Integer;
+                    begin
+                        Clear(myInteger);
+                        myIntegerList.Add(5);
+                        myIntegerList.Add(2);
+                        myIntegerList.Add(3);
+                        myIntegerList.Add(1);
+                        myIntegerList.Add(4);
+                        repeat
+                            if myText <> '' then
+                                myText += ',';
+                            myInteger := myInteger + 1;
+                            myText += Format(myIntegerList.Get(myInteger));
+                        until myIntegerList.Count = myInteger;
+                        Message(myText);
+                    end;
+                }
+                action(Contains)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myIntegerList: List of [Integer];
+                        exists: Boolean;
+                    begin
+                        myIntegerList.Add(5);
+                        exists := myIntegerList.Contains(5);
+                        Message(Format(exists));
+                    end;
+                }
+                action(Get)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myIntegerList: List of [Integer];
+                        myInteger: Integer;
+                    begin
+                        myIntegerList.Add(5);
+                        myIntegerList.Add(2);
+                        myIntegerList.Add(1);
+                        myIntegerList.Add(5);
+                        myInteger := myIntegerList.Get(3);
+                        Message(Format(myInteger));
+                    end;
+                }
+                action(Set)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                        myText: Text;
+                    begin
+                        myTextList.Add('HELLO ');
+                        myTextList.Add('DYNAMICS ');
+                        myTextList.Add('BUSINESS ');
+                        myTextList.Add('CENTRAL');
+                        myText := myTextList.Get(2);
+                        Message(myText);
+                        myTextList.Set(2, 'DYNAMICS 365 ');
+                        myText := myTextList.Get(2);
+                        Message(myText);
+                    end;
+                }
+
+                action(Insert)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                        myText: Text;
+                    begin
+                        myTextList.Add('HELLO ');
+                        myTextList.Add('DYNAMICS ');
+                        myTextList.Add('BUSINESS ');
+                        myTextList.Add('CENTRAL');
+                        myText := myTextList.Get(3);
+                        Message(myText);
+                        myTextList.Insert(3, '365 ');
+                        myText := myTextList.Get(3);
+                        Message(myText);
+                    end;
+                }
+                action(Remove)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                        myText, myText2 : Text;
+                    begin
+                        myTextList.Add('HELLO ');
+                        myTextList.Add('DYNAMICS ');
+                        myTextList.Add('HELLO ');
+                        myTextList.Add('CENTRAL');
+                        myText := myTextList.Get(1);
+                        myText += myTextList.Get(2);
+                        myText += myTextList.Get(3);
+                        myText += myTextList.Get(4);
+
+                        myTextList.Remove('HELLO ');
+                        // if myTextList.Remove('HELLO ') then begin
+                        //     Message('HELLO WAS REMOVED');
+                        // end;
+                        myText2 := myTextList.Get(1);
+                        myText2 += myTextList.Get(2);
+                        myText2 += myTextList.Get(3);
+                        Message('Before %1\After %2 \', myText, myText2);
+                    end;
+                }
+                action(RemoveAt)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                        myText, myText0 : Text;
+                    begin
+                        myTextList.Add('HELLO ');
+                        myTextList.Add('DYNAMICS ');
+                        myTextList.Add('BUSINESS ');
+                        myTextList.Add('CENTRAL');
+                        myText := myTextList.Get(1);
+                        myText += myTextList.Get(2);
+                        myText += myTextList.Get(3);
+                        myText += myTextList.Get(4);
+                        if myTextList.RemoveAt(2) then
+                            Message('Item at index 2 is removed.');
+                        myText0 := myTextList.Get(1);
+                        myText0 += myTextList.Get(2);
+                        myText0 += myTextList.Get(3);
+                        Message('Before\ %1 \after \ %2', myText, myText0);
+                    end;
+                }
+                action(Count)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                        myInteger, i : Integer;
+                        myText: Text;
+                    begin
+                        myTextList.Add('HELLO ');
+                        myTextList.Add('DYNAMICS ');
+                        myTextList.Add('BUSINESS ');
+                        myTextList.Add('CENTRAL');
+                        myInteger := myTextList.Count();
+                        Message('%1', myTextList.Count());
+                        repeat
+                            if myText <> '' then
+                                myText += ',';
+                            i := i + 1;
+                            myText += Format(myTextList.Get(i));
+                        until myTextList.Count = i;
+                        Message(myText);
+                    end;
+                }
+                action(AddRange)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                    begin
+                        myTextList.AddRange('HELLO ', 'DYNAMICS 365 ', 'BUSINESS ', 'CENTRAL');
+                        Message(Format(myTextList.Count));
+                    end;
+                }
+                action(GetRange)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                        myNewTextList: List of [Text];
+                        myText: Text;
+                    begin
+                        myTextList.AddRange('HELLO ', 'DYNAMICS 365 ', 'BUSINESS ', 'CENTRAL');
+                        myNewTextList := myTextList.GetRange(2, 2);
+                        myText := Format(myNewTextList.Get(1)) + ', ';
+                        myText += Format(myNewTextList.Get(2));
+                        Message(myText);
+                    end;
+                }
+                action(RemoveRange)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                        myText, myText0 : Text;
+                    begin
+                        myTextList.AddRange('HELLO ', 'DYNAMICS 365 ', 'BUSINESS ', 'CENTRAL');
+                        myText := Format(myTextList.Get(1));
+                        myText += Format(myTextList.Get(2));
+                        myText += Format(myTextList.Get(3));
+                        myText += Format(myTextList.Get(4));
+                        if myTextList.RemoveRange(2, 2) then
+                            Message('Items removed.');
+                        myText0 := Format(myTextList.Get(1));
+                        myText0 += Format(myTextList.Get(2));
+                        // myText += Format(myTextList.Get(3));
+                        // myText += Format(myTextList.Get(4));
+                        Message('%1\ %2', myText, myText0);
+                        // myTextList: 'HELLO ', 'CENTRAL'
+                    end;
+                }
+                action(IndexOf)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myIntegerList: List of [Integer];
+                        index: Integer;
+                    begin
+                        myIntegerList.Add(5);
+                        myIntegerList.Add(2);
+                        myIntegerList.Add(1);
+                        myIntegerList.Add(5);
+                        index := myIntegerList.IndexOf(5);
+                        Message(Format(index));
+                    end;
+                }
+                action(LastIndexOf)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myIntegerList: List of [Integer];
+                        index: Integer;
+
+                    begin
+                        myIntegerList.Add(5);
+                        myIntegerList.Add(2);
+                        myIntegerList.Add(1);
+                        myIntegerList.Add(5);
+                        index := myIntegerList.LastIndexOf(5);
+                        Message(Format(index));
+                    end;
+                }
+                action(Reverse)
+                {
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        myTextList: List of [Text];
+                        myText, myText0 : Text;
+                        i: Integer;
+                    begin
+                        myTextList.AddRange('HELLO ', 'DYNAMICS 365 ', 'BUSINESS ', 'CENTRAL');
+                        repeat
+                            if myText <> '' then
+                                myText += ', ';
+
+                            i := i + 1;
+                            myText += Format(myTextList.Get(i));
+                        until myTextList.Count = i;
+
+                        myTextList.Reverse();
+                        Clear(i);
+                        repeat
+                            if myText0 <> '' then
+                                myText0 += ', ';
+
+                            i := i + 1;
+                            myText0 += Format(myTextList.Get(i));
+                        until myTextList.Count = i;
+                        Message('Original \%1 \ Reverse \%2', myText, myText0);
+                        // myTextList: 'CENTRAL', 'BUSINESS ', 'DYNAMICS 365 ', 'HELLO '
                     end;
                 }
             }
@@ -507,6 +803,24 @@ page 50137 "Staring Function"
 
     var
         Val1: Text[30];
+
+
+    /// <summary>
+    /// WorkWithListOfCustomers.
+    /// </summary>
+    procedure WorkWithListOfCustomers()
+    var
+        customerNames: List of [Text];
+    begin
+        // Adding an element to the list
+        customerNames.Add('John');
+
+        // Checking if the list contains an element
+        if customerNames.Contains('John') then
+            Message('John is in the list')
+        else
+            Message('John is not in the list')
+    end;
 
     local procedure TestListAssignment()
     var
@@ -522,7 +836,7 @@ page 50137 "Staring Function"
         ListNumberTwo.Add(21);
 
         Message('List1 count: %1\List2 count: %2', ListNumberOne.Count(), ListNumberTwo.Count());
-    end;    
+    end;
 
     local procedure TestListShallowCopy()
     var
